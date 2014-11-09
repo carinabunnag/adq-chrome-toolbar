@@ -1,0 +1,20 @@
+{
+  "manifest_version": 2,
+
+  "name": "Get html code",
+  "description": "This extension gets the html code from a webpage and displays it on another page-
+                  background.html",
+  "version": "1.0",
+
+  "browser_action": {
+    "default_title": "Find HTML"
+  },
+
+  "background": {
+    "persistent": false,
+    "scripts": ["background.js"]
+  },
+
+  "permissions": [ "activeTab"]
+
+}
