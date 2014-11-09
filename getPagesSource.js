@@ -1,6 +1,7 @@
 // @author Rob W <http://stackoverflow.com/users/938089/rob-w>
 // Demo: var serialized_html = DOMtoString(document);
 
+// get HTML source
 function DOMtoString(document_root) {
     var html = '',
         node = document_root.firstChild;
@@ -28,7 +29,17 @@ function DOMtoString(document_root) {
     return html;
 }
 
+// find AdQ script and return it
+function hasScript() {
+  var output = '';
+  if (DOMtoString(document).match(/cdn+\.+adjs+\.+net\/publisher/))
+    output += 'AdQ publisher script found!';
+  else
+    output += 'AdQ publisher script NOT found!';
+  return output;
+}
+
 chrome.extension.sendMessage({
-    action: "getSource",
-    source: DOMtoString(document)
+    action: "findScript",
+    source: hasScript()
 });

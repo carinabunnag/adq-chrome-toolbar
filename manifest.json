@@ -2,7 +2,8 @@
   "name": "Get HTML code",
   "version": "1.0",
   "manifest_version": 2,
-  "description": "This extension gets the HTML code from a webpage and displays it as a popup.",
+  "description": "This extension gets the HTML code from a webpage, checks for the AdQ
+                  publisher script, and displays yes/no in the popup.",
   "browser_action": {
     "default_popup": "popup.html"
   },
