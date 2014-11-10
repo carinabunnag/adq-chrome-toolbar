@@ -2,13 +2,13 @@
 
 var color = "";
 // update icon
-function updateIcon(color) {
-  chrome.browserAction.setIcon({path: color + ".png"});
-}
+function updateIcon(icon_color) {
+  chrome.browserAction.setIcon({path: icon_color + ".png"});
+};
 
 
 // listens for message
-chrome.extension.onMessage.addListener(function(request, sender) {
+chrome.runtime.onMessage.addListener(function(request, sender) {
   if (request.action == "findScript") {
     color = request.source;
     updateIcon(color);
@@ -19,18 +19,17 @@ chrome.extension.onMessage.addListener(function(request, sender) {
 function onWindowLoad() {
 
   chrome.tabs.executeScript(null, {
-    file: "getPagesSource.js"
+    file: "findScript.js"
   }, function() {
-    if (chrome.extension.lastError) {
-      alert("icon should be YELLOW");
+    // If you try and inject into an extensions page or the webstore/NTP you'll get an error
+    if (chrome.runtime.lastError) {
+      // alert("icon should be YELLOW");
       updateIcon("yellow");
     }
   });
-
-}
+};
 
 window.onload = onWindowLoad;
 
-
-//********** WORKS, BUT ONLY WHEN WE REFRESH THE TOOLBAR ON THE PAGE WE WANT OUR TOOLBAR TO READ.
-// USING DEVELOPER TOOL WINDOW, WE RELOAD THE TOOLBAR AND THE PAGE WILL APPEAR WITH THE ICON WE WANT.
+//Since toolbar does not refresh automatically, we must click the icon to update.
+chrome.browserAction.onClicked.addListener(onWindowLoad);
