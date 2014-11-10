@@ -31,12 +31,14 @@ function DOMtoString(document_root) {
 
 // find AdQ script and return it
 function hasScript() {
-  var output = '';
-  if (DOMtoString(document).match(/cdn+\.+adjs+\.+net\/publisher/))
-    output += 'AdQ publisher script found!';
-  else
-    output += 'AdQ publisher script NOT found!';
-  return output;
+  if (DOMtoString(document).match(/cdn+\.+adjs+\.+net\/publisher/)){
+    alert("icon should be GREEN");
+    return "green";
+  }
+  else {
+    alert("icon should be RED");
+    return "red";
+  }
 }
 
 chrome.extension.sendMessage({
