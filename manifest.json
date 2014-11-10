@@ -4,7 +4,7 @@
   "manifest_version": 2,
   "description": "This extension checks whether or not a webpage is using AdQ and updates the icon accordingly.",
   "browser_action": {
-    "default_title": "AdQ toolbar"
+    "default_icon": "icon.png"
   },
 
   "background": {

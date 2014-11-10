@@ -14,12 +14,10 @@ function DOMtoString(document_root) {
 // find AdQ script and return it
 function hasScript() {
   if (DOMtoString(document).match(/cdn+\.+adjs+\.+net\/publisher/)){
-    // alert("icon should be GREEN");
-    return "green";
+    return "#0F0";
   }
   else {
-    // alert("icon should be RED");
-    return "red";
+    return "#F00";
   }
 };
 
