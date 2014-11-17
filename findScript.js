@@ -1,6 +1,7 @@
 
 
-// get HTML source, check if script is there, return array of scripts, or empty array if there's no script
+// get HTML source, check if script is there, return array of scripts,
+// or empty array if there's no script
 function DOMtoString(document_root) {
   var html = "",
     node = document_root.firstChild;

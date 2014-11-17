@@ -24,8 +24,6 @@ chrome.runtime.onMessage.addListener(function(request, sender) {
   }
 });
 
-
-
 function onTabUpdate() {
   chrome.tabs.query({active: true}, function (tab) {
     chrome.tabs.executeScript(null, {
@@ -37,10 +35,10 @@ function onTabUpdate() {
   });
 };
 
-window.onload = onTabUpdate;
-
 //listen for new tab to be activated
 chrome.tabs.onActivated.addListener(onTabUpdate);
 
 //listen for current tab to be changed
 chrome.tabs.onUpdated.addListener(onTabUpdate);
+
+$(document).ready = onTabUpdate;
