@@ -16,7 +16,6 @@ function DOMtoString(document_root) {
   return html;
 };
 
-
 // count how many scripts there are
 function countScripts() {
   var scripts = DOMtoString(document).match(/cdn+\.+adjs+\.+net\/publisher/);
@@ -26,6 +25,7 @@ function countScripts() {
     return 0;
 };
 
+//send message to background.js
 chrome.runtime.sendMessage({
   action: "findScript",
   source: countScripts()
