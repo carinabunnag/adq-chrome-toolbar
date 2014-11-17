@@ -25,16 +25,22 @@ chrome.runtime.onMessage.addListener(function(request, sender) {
 });
 
 
-function onWindowLoad() {
-  chrome.tabs.executeScript(null, {
-    file: "findScript.js"
-  }, function() {
-    // If you try and inject into an extensions page or the webstore/NTP you'll get an error
-    if (chrome.runtime.lastError)
-      updateBadge("#FF0");
+
+function onTabUpdate() {
+  chrome.tabs.query({active: true}, function (tab) {
+    chrome.tabs.executeScript(null, {
+      file: "findScript.js"
+    }, function() {
+      if (chrome.runtime.lastError)
+        updateBadge("#FF0");
+    });
   });
 };
 
-window.onload = onWindowLoad;
+window.onload = onTabUpdate;
 
-chrome.browserAction.onClicked.addListener(onWindowLoad);
+//listen for new tab to be activated
+chrome.tabs.onActivated.addListener(onTabUpdate);
+
+//listen for current tab to be changed
+chrome.tabs.onUpdated.addListener(onTabUpdate);
