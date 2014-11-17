@@ -30,3 +30,9 @@ chrome.runtime.sendMessage({
   action: "findScript",
   source: countScripts()
 });
+
+//send message to addScript.js
+chrome.runtime.sendMessage({
+  action: "addScript",
+  source: countScripts()
+});

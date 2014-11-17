@@ -22,21 +22,27 @@ chrome.runtime.onMessage.addListener(function(request, sender) {
     else
       // page does not contain publisher script
       updateBadge("#F00");
+    return count;
   }
 });
-
 
 function onTabUpdate() {
   chrome.tabs.query({active: true}, function(tab) {
     chrome.tabs.executeScript(null, {
       file: "findScript.js"
-    }, function() {
-      if (chrome.runtime.lastError)
-        updateBadge("#FF0");
+      }, function() {
+        if (chrome.runtime.lastError)
+          updateBadge("#FF0");
     });
+
+    // add script only if there is no publisher script
+    if (count == 0) {
+      chrome.tabs.executeScript(null, {
+        file: "addScript.js"
+      });
+    }
   });
 };
-
 
 //listen for new tab to be activated
 chrome.tabs.onActivated.addListener(onTabUpdate);

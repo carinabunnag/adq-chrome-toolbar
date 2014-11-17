@@ -11,14 +11,5 @@
     "scripts": ["background.js"]
   },
 
-  "content_scripts": [
-    {
-      "matches": ["<all_urls>"],
-      "js": ["addScript.js"]
-    }
-  ],
-
-  "permissions": ["tabs", "<all_urls>"],
-
-  "web_accessible_resources": ["addScript.js"]
+  "permissions": ["tabs", "<all_urls>"]
 }
