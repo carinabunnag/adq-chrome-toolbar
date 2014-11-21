@@ -34,20 +34,15 @@ function onTabUpdate() {
         if (chrome.runtime.lastError)
           updateBadge("#FF0");
     });
-
-    // add script only if there is no publisher script
     if (count == 0) {
       chrome.tabs.executeScript(null, {
         file: "addScript.js"
       });
     }
   });
-};
+}
 
 //listen for new tab to be activated
 chrome.tabs.onActivated.addListener(onTabUpdate);
-
 //listen for current tab to be changed
 chrome.tabs.onUpdated.addListener(onTabUpdate);
-
-$(document).ready = onTabUpdate;
