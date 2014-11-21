@@ -34,6 +34,7 @@ function findAppend() {
 }
 
 // find ad frames in body
+// counts how many ads have publisher append script attached to it. 
 function findAds() {
   var count = 0,
       iframes = document.getElementsByTagName("iframe");
