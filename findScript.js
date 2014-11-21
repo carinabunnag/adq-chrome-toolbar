@@ -34,7 +34,7 @@ function findAppend() {
 }
 
 // find ad frames in body
-// counts how many ads have publisher append script attached to it. 
+// counts how many ads have publisher append script attached to it.
 function findAds() {
   var count = 0,
       iframes = document.getElementsByTagName("iframe");
@@ -53,7 +53,7 @@ function findAds() {
       }
     }
   }
-
+  return count;
 }
 
 /* default ad sizes:
@@ -84,3 +84,9 @@ chrome.runtime.sendMessage({
   action: "addScript",
   source: hasScript()
 });
+
+//send message to popup.js
+chrome.runtime.sendmessage({
+  action: "countAds",
+  source: findAds()
+})
