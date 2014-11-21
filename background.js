@@ -34,15 +34,22 @@ function onTabUpdate() {
         if (chrome.runtime.lastError)
           updateBadge("#FF0");
     });
-    if (count == 0) {
-      chrome.tabs.executeScript(null, {
-        file: "addScript.js"
-      });
-    }
   });
+}
+
+function onIconClick() {
+  if (count == 0) {
+    chrome.tabs.executeScript(null, {
+      file: "addScript.js"
+    });
+    alert("Injected publisher script!");
+  }
 }
 
 //listen for new tab to be activated
 chrome.tabs.onActivated.addListener(onTabUpdate);
 //listen for current tab to be changed
 chrome.tabs.onUpdated.addListener(onTabUpdate);
+
+//inject script when toolbar icon is clicked
+chrome.browserAction.onClicked.addListener(onIconClick);
