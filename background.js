@@ -41,8 +41,10 @@ function onIconClick() {
   if (count == 0) {
     chrome.tabs.executeScript(null, {
       file: "addScript.js"
+    }, function() {
+      if (chrome.runtime.lastError)
+        alert("Error: CANNOT inject publisher script!");
     });
-    alert("Injected publisher script!");
   }
 }
 
