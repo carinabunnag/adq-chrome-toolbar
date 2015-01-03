@@ -7,11 +7,11 @@ Includes the following functions:
 
 - Changes toolbar icon accordingly: green=yes, red=no, yellow=non-webpages
 - Displays the following information in a popup page when icon is clicked:
-  - Number of ad frames:
-  - Has advertiser script:
-  - Has publisher script:
+  - Has publisher script?
+  - Has advertiser script?
+  - Number of ad frames
 
-## Important Files:
+## Important Files
 
 ### background
 
