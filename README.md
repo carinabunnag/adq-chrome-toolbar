@@ -14,11 +14,8 @@ Includes the following functions:
 ## Important Files
 
 ### background
-
 - Responsible for changing icons
 
 ### findScript
-
 - Get string HTML, finds publisher and append scripts, and returns iframe elements.
-
 - Speaks to background, addScript and adFrame files.
