@@ -1,18 +1,26 @@
-adq-chrome-toolbar
+Brief Overview
 ==================
 
-A toolbar compatible with Google Chrome for AdQ.
+A Google Chrome extension built for AdQ. It checks whether or not a webpage is
+using AdQ scripts and acquires various data from that webpage.
 
-Functions:
-----------
-  Checks whether or not a webpage is using the AdQ publisher and advertiser scripts.
+Includes the following functions:
 
-  Updates the extension icon accordingly: green=yes, red=no, yellow=non-webpages
+- Changes toolbar icon accordingly: green=yes, red=no, yellow=non-webpages
+- Displays the following information in a popup page when icon is clicked:
+  - Number of ad frames:
+  - Has advertiser script:
+  - Has publisher script:
 
-  Displays the following information in a popup page when icon is clicked:
+### Important files:
+====================
 
-    -
+###### background
 
-    -
-    
-    -
+Responsible for changing icons
+
+###### findScript
+
+Get string HTML, finds publisher and append scripts, and returns iframe elements.
+
+Speaks to background, addScript and adFrame files.
