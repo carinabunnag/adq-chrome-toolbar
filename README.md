@@ -1,5 +1,4 @@
-# Brief Overview
-==================
+## Brief Overview
 
 A Google Chrome extension built for AdQ. It checks whether or not a webpage is
 using AdQ scripts and acquires various data from that webpage.
@@ -12,8 +11,7 @@ Includes the following functions:
   - Has advertiser script:
   - Has publisher script:
 
-# Important files:
-====================
+## Important Files:
 
 ### background
 
