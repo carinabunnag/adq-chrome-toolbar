@@ -1,4 +1,4 @@
-Brief Overview
+# Brief Overview
 ==================
 
 A Google Chrome extension built for AdQ. It checks whether or not a webpage is
@@ -12,14 +12,14 @@ Includes the following functions:
   - Has advertiser script:
   - Has publisher script:
 
-### Important files:
+# Important files:
 ====================
 
-###### background
+### background
 
 Responsible for changing icons
 
-###### findScript
+### findScript
 
 Get string HTML, finds publisher and append scripts, and returns iframe elements.
 
