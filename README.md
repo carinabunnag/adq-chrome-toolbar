@@ -11,7 +11,7 @@ Includes the following functions:
   - Has advertiser script:
   - Has publisher script:
 
-## Important Files:
+## Important Files
 
 ### background
 
