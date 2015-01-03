@@ -1,7 +1,7 @@
 
 // listen for messages
 chrome.runtime.onMessage.addListener(function(request, sender) {
-  if (request.action == "countAds") {
+  if (request.action == "countAd") {
     message.innerText = request.source;
   }
 });
@@ -11,7 +11,7 @@ function onWindowLoad() {
   var message = document.querySelector('#message');
 
   chrome.tabs.executeScript(null, {
-    file: "findScript.js"
+    file: "adFrame.js"
   }, function() {
     // If you try and inject into an extensions page or the webstore/NTP you'll get an error
     if (chrome.extension.lastError) {
