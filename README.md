@@ -15,10 +15,10 @@ Includes the following functions:
 
 ### background
 
-Responsible for changing icons
+- Responsible for changing icons
 
 ### findScript
 
-Get string HTML, finds publisher and append scripts, and returns iframe elements.
+- Get string HTML, finds publisher and append scripts, and returns iframe elements.
 
-Speaks to background, addScript and adFrame files.
+- Speaks to background, addScript and adFrame files.
