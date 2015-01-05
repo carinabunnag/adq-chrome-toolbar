@@ -22,6 +22,12 @@ function onWindowLoad() {
 
 window.onload = onWindowLoad;
 
+chrome.extension.onMessage.addListener(function(request, sender) {
+  if (request.action == "findScript") {
+    message.innerText = request.source;
+  }
+});
+
 //
 // // listens for message
 // chrome.runtime.onMessage.addListener(function(request, sender) {

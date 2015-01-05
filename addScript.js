@@ -1,6 +1,6 @@
+/* DELETE THIS FILE */
 
-// append script to publisher webpage
-
+// append publisher script to publisher webpage
 var s = document.createElement("script");
 s.type = "text/javascript";
 s.src = "//cdn.adjs.net/publisher.ad.min.js"

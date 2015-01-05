@@ -1,3 +1,4 @@
+
 // get HTML source and return as string
 function DOMtoString(document_root) {
   var html = "",
@@ -13,7 +14,7 @@ function DOMtoString(document_root) {
   return html;
 };
 
-// find publisher script in header
+// find publisher script in head
 function hasScript() {
   var script = DOMtoString(document.head).match(/cdn+\.+adjs+\.+net\/publisher+\.+ad+\.+min+\.+js/);
   if (script)
@@ -62,11 +63,6 @@ chrome.runtime.sendMessage({
   source: hasScript()
 });
 
-//send message to addScript.js
-chrome.runtime.sendMessage({
-  action: "addScript",
-  source: hasScript()
-});
 
 //send message to adFrame.js
 chrome.runtime.sendmessage({
