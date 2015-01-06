@@ -8,13 +8,23 @@ function updateBadge(badge_color) {
   chrome.browserAction.setBadgeText({text: " "});
 }
 
-function inject() {
-  //append publisher script to publisher webpage
+// inject publisher script to publisher webpage head
+function addPub() {
   var s = document.createElement("script");
   s.type = "text/javascript";
   s.src = "//cdn.adjs.net/publisher.ad.min.js";
   document.getElementsByTagName("head")[0].appendChild(s);
   // alert("Injected publisher script!");
+}
+
+// inject publisher append script after ad
+function addPubAppend() {
+  var s = document.createElement("script");
+  s.type = "text/javascript";
+  s.src = "//cdn.adjs.net/publisher.append.ad.min.js";
+  //find specific location to insert (right after first iframe, in same div)
+  document.getElementsByTagName("head")[0].appendChild(s);
+  // alert("Injected publisher append script!");
 }
 
 
@@ -33,7 +43,7 @@ chrome.runtime.onMessage.addListener(function(request, sender) {
   }
 });
 
-//function to update icon color
+//function to execute scripts
 function onTabUpdate() {
   chrome.tabs.query({active: true}, function(tab) {
     chrome.tabs.executeScript(null, {

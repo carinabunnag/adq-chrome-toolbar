@@ -37,13 +37,45 @@ function div_name() {
   return name;
 }
 
-
 //SECOND TEST
-//check for google script
+//check for google script and return array of scripts
 function google_script() {
-  var script = document.getElementByTagName("script");
-
+  var goog = document.scripts,
+    gArray = [];
+  var i;
+  for (i = 0; i < goog.length; i++) {
+    var googStr = DOMtoString(goog[i]);
+    if (googStr.match(/pagead2+\.+googlesyndication+\.+com\/pagead/))
+      gArray[gArray.length] = goog[i];
+  }
+  return gArray;
 }
+
+//THIRD TEST
+// check for amazon iframe and return array of iframes
+function amazon_iframe() {
+  //get all divs
+  var divs = document.getElementsByTagName("div");
+  //search each div for iframes
+  var node = divs.item(); //first element in divs array
+  while (node) {
+    if (node.hasChildNodes()) {
+      var new_root = node.firstChild;
+      if (new_root.nodeType == 1) {
+
+      }
+    }
+    node = node.nextSibling();
+  }
+
+  /* NOT SURE IF CODE BELOW WORKS */
+  // for (i = 0; i < div.length; i++) {
+  //   if (div[i].hasChildNodes()) {
+  //
+  //   }
+  // }
+}
+
 
 //find ad frames and returns an array of iframes
 function get_iframes() {
@@ -55,32 +87,35 @@ function get_iframes() {
 //   var adframes =
 // }
 
-//find publisher append script
-function findAppend() {
-  var scripts = document.getElementsByTagName("script");
-  var is_match =
-        DOMtoString(scripts).match(/cdn+\.+adjs+\.+net\/publisher+\.+append+\.+ad+\.+min+\.+js/);
-  if (is_match)
-    return 1; //there is an append script in page
-  else
-    return 0;
-}
 
 //returns array of all ads on the page
-// function ads() {
-//   var ads = [];
-//   var divs = div_name();
-//   if (divs)
-//      ads = ads.concat(divs);
-//   if
-//
-//   return ads;
-// }
+function ads() {
+  var ads = [];
+  var divs = div_name(),
+    gscripts = google_script();
+  if (divs)
+    ads = ads.concat(divs);
+  if (gscripts)
+    ads = ads.concat(gscripts);
+  return ads;
+}
 
 //returns number of all ads on the page
 function adCount() {
   var ads = ads();
   return ads.length;
+}
+
+//use ads() to find check if publisher append script is there
+function findAppend() {
+  var ads = ad();
+  var scripts = document.getElementsByTagName("script");
+  var is_match =
+    DOMtoString(scripts).match(/cdn+\.+adjs+\.+net\/publisher+\.+append+\.+ad+\.+min+\.+js/);
+  if (is_match)
+    return 1; //there is an append script in page
+  else
+    return 0;
 }
 
 
