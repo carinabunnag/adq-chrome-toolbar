@@ -1,3 +1,11 @@
+/* Check if append script is in header */
+function hasScript() {
+  var head = document.head.outerHTML;
+  if (head.match(/cdn\.adjs\.net\/publisher\.ad\.min\.js/))
+    return 1;
+  else
+    return 0;
+}
 
 /* Gets array of all div elements in document and returns another array of ONLY advman divs */
 function getDivs(doc) {
@@ -50,7 +58,7 @@ function getAllAds(doc) {
   var script = getScripts(doc); //array of scripts
   var iframe = getIframes(doc); //array of iframes
   var i, j, k;
-  
+
   //go through divs first
   for (i = 0; i < div.length; i++) {
     //check for google script
@@ -89,5 +97,5 @@ function getAllAds(doc) {
 //send message
 chrome.runtime.sendMessage({
   action: "findScript",
-  source: getAllAds(document)
+  source: hasScript()
 });
