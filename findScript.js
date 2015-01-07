@@ -13,7 +13,6 @@ function getDivs(doc) {
   return dArray;
 }
 
-/* Gets array of all iframes in document and returns another array of ONLY google script */
 function getScripts(doc) {
   var attr = '', sArray = [];
   var scripts = doc.getElementsByTagName('script');
@@ -45,16 +44,50 @@ function getIframes(doc) {
 /* Get an array for all ads.
    Hierarchy: div, google script, amazon iframe
 */
-function ads() {
-  var d = getDivs(); //array of divs
-  var s = getScripts(); //array of scripts
-  var f = getIframes(); //array of iframes
-  var i;
+function getAllAds(doc) {
+  var ads = [];
+  var div = getDivs(doc); //array of divs
+  var script = getScripts(doc); //array of scripts
+  var iframe = getIframes(doc); //array of iframes
+  var i, j, k;
+  
+  //go through divs first
+  for (i = 0; i < div.length; i++) {
+    //check for google script
+    for (j = 0; j < script.length; j++) {
+      if (div[i].indexOf(script[j]) > -1) { //google script is contained in div
+        script[j] = null; //remove from script array
+        ads[ads.length] = div[i];//add div to main array
+      }
+    }
+    //check for amazon iframe
+    for (k = 0; k < iframe.length; k++) {
+      if (div[i].indexOf(iframe[k]) > -1) { //amazon iframe is contained in div
+        iframe[k] = null; //remove from iframe array
+        ads[ads.length] = div[i];
+      }
+    }
+  }
 
+  //go through scripts
+  for (j = 0; j < script.length; j++) {
+    if (script[j] != null) {
+      ads[ads.length] = script[j];
+    }
+  }
+  //go through iframes
+  for (k = 0; k < iframe.length; k++) {
+    if (iframe[k] != null){
+      ads[ads.length] = iframe[k];
+    }
+  }
+  return ads;
 }
+
+
 
 //send message
 chrome.runtime.sendMessage({
   action: "findScript",
-  source: getDivs(document)
+  source: getAllAds(document)
 });
