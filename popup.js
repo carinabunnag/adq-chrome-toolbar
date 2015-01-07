@@ -1,17 +1,14 @@
-
-// listen for messages
-chrome.runtime.onMessage.addListener(function(request, sender) {
-  if (request.action == "countAd") {
+chrome.extension.onMessage.addListener(function(request, sender) {
+  if (request.action == "findScript") {
     message.innerText = request.source;
   }
 });
 
 function onWindowLoad() {
-
   var message = document.querySelector('#message');
 
   chrome.tabs.executeScript(null, {
-    file: "adFrame.js"
+    file: "findScript.js"
   }, function() {
     // If you try and inject into an extensions page or the webstore/NTP you'll get an error
     if (chrome.extension.lastError) {
@@ -21,25 +18,3 @@ function onWindowLoad() {
 }
 
 window.onload = onWindowLoad;
-
-chrome.extension.onMessage.addListener(function(request, sender) {
-  if (request.action == "findScript") {
-    message.innerText = request.source;
-  }
-});
-
-//
-// // listens for message
-// chrome.runtime.onMessage.addListener(function(request, sender) {
-//   if (request.action == "findScript") {
-//     count = request.source;
-//     if (count > 0)
-//       updateBadge("#0F0");
-//       else
-//         // page does not contain publisher script
-//         updateBadge("#F00");
-//         return count;
-//       }
-//     });
-//
-// window.onload = onWindowLoad;

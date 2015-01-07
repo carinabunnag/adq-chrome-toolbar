@@ -1,133 +1,49 @@
 
-// get HTML source and return as string
-function DOMtoString(document_root) {
-  var html = "",
-    node = document_root.firstChild;
-  while(node) {
-    html += node.outerHTML;
-    if (node.hasChildNodes()) {
-      var new_root = node.firstChild;
-      DOMtoString(new_root);
-    }
-    node = node.nextSibling;
-  }
-  return html;
-};
-
-// find publisher script in head
-function hasScript() {
-  var script = DOMtoString(document.head).match(/cdn+\.+adjs+\.+net\/publisher+\.+ad+\.+min+\.+js/);
-  if (script)
-    return 1;
-  else
-    return 0;
-}
-
-/* find ads on webpage */
-
-//FIRST TEST
-//check for div name "advman-ad-" and return array of names
-function div_name() {
-  var count = 1,
-    name = [];
-  while (document.getElementById("advman-ad-" + count)) {
-    name[name.length] = document.getElementById("advman-ad-" + count);
-    count++;
-  }
-  return name;
-}
-
-//SECOND TEST
-//check for google script and return array of scripts
-function google_script() {
-  var goog = document.scripts,
-    gArray = [];
+/* Gets array of all div elements in document and returns another array of ONLY advman divs */
+function getDivs() {
+  var attr = '', dArray = [];
+  var divs = document.getElementsByTagName('div');
   var i;
-  for (i = 0; i < goog.length; i++) {
-    var googStr = DOMtoString(goog[i]);
-    if (googStr.match(/pagead2+\.+googlesyndication+\.+com\/pagead/))
-      gArray[gArray.length] = goog[i];
-  }
-  return gArray;
-}
-
-//THIRD TEST
-// check for amazon iframe and return array of iframes
-function amazon_iframe() {
-  //get all divs
-  var divs = document.getElementsByTagName("div");
-  //search each div for iframes
-  var node = divs.item(); //first element in divs array
-  while (node) {
-    if (node.hasChildNodes()) {
-      var new_root = node.firstChild;
-      if (new_root.nodeType == 1) {
-
-      }
+  for (i = 0; i < divs.length; i++) {
+    attr = divs[i].getAttribute('id');
+    if (attr != null && attr.match(/^advman-ad-\d/)) { //cannot match empty string
+      dArray[dArray.length] = attr;
     }
-    node = node.nextSibling();
   }
-
-  /* NOT SURE IF CODE BELOW WORKS */
-  // for (i = 0; i < div.length; i++) {
-  //   if (div[i].hasChildNodes()) {
-  //
-  //   }
-  // }
+  return dArray;
 }
 
-
-//find ad frames and returns an array of iframes
-function get_iframes() {
-  var iframes = document.getElementsByTagName("iframe");
-  return iframes;
+/* Gets array of all iframes in document and returns another array of ONLY amazon iframes */
+function getIframes() {
+  var attr = '', fArray = [];
+  var iframes = document.getElementsByTagName('iframe');
+  var i;
+  for (i = 0; i < iframes.length; i++) {
+    attr = iframes[i].getAttribute('src');
+    if (attr != null
+      && attr.match(/^http:\/\/rcm-na\.amazon-adsystem\.com\/e\/cm\?t=/)) {
+      fArray[fArray.length] = attr;
+    }
+  }
+  return fArray;
 }
 
-// function findAdFrame() {
-//   var adframes =
-// }
-
-
-//returns array of all ads on the page
-function ads() {
-  var ads = [];
-  var divs = div_name(),
-    gscripts = google_script();
-  if (divs)
-    ads = ads.concat(divs);
-  if (gscripts)
-    ads = ads.concat(gscripts);
-  return ads;
+/* Gets array of all iframes in document and returns another array of ONLY google script */
+function getScripts() {
+  var attr = '', sArray = [];
+  var scripts = document.getElementsByTagName('script');
+  var i;
+  for (i = 0; i < scripts.length; i++) {
+    attr = scripts[i].getAttribute('src');
+    if (attr != null && attr.match(/\/\/pagead2\.googlesyndication\.com\/pagead\//)) {
+      sArray[sArray.length] = scripts[i].outerHTML;
+    }
+  }
+  return sArray;
 }
 
-//returns number of all ads on the page
-function adCount() {
-  var ads = ads();
-  return ads.length;
-}
-
-//use ads() to find check if publisher append script is there
-function findAppend() {
-  var ads = ad();
-  var scripts = document.getElementsByTagName("script");
-  var is_match =
-    DOMtoString(scripts).match(/cdn+\.+adjs+\.+net\/publisher+\.+append+\.+ad+\.+min+\.+js/);
-  if (is_match)
-    return 1; //there is an append script in page
-  else
-    return 0;
-}
-
-
-//send message to background.js
+//send message 
 chrome.runtime.sendMessage({
   action: "findScript",
-  source: hasScript()
+  source: getDivs()
 });
-
-
-//send message to adFrame.js
-chrome.runtime.sendmessage({
-  action: "getFrames",
-  source: getAdFrames()
-})
