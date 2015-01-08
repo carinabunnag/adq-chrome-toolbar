@@ -8,18 +8,18 @@ function hasScript() {
 }
 
 /* Gets array of all div elements in document and returns another array of ONLY advman divs */
-// function getDivs(doc) {
-//   var attr = '', dArray = [];
-//   var divs = doc.getElementsByTagName('div');
-//   var i;
-//   for (i = 0; i < divs.length; i++) {
-//     attr = divs[i].getAttribute('id');
-//     if (attr != null && attr.match(/^advman-ad-\d/)) { //cannot match empty string
-//       dArray[dArray.length] = divs[i].outerHTML;
-//     }
-//   }
-//   return dArray;
-// }
+function getDivs(doc) {
+  var attr = '', dArray = [];
+  var divs = doc.getElementsByTagName('div');
+  var i;
+  for (i = 0; i < divs.length; i++) {
+    attr = divs[i].getAttribute('id');
+    if (attr != null && attr.match(/^advman-ad-\d/)) { //cannot match empty string
+      dArray[dArray.length] = divs[i].outerHTML;
+    }
+  }
+  return dArray;
+}
 
 function hasAppend(elem) {
   var scripts = doc.getElementsByTagName('script');
@@ -54,27 +54,29 @@ function createScript() {
   return s.outerHTML; //s is an element
 }
 
-function getDivs(doc) {
-  var attr = '', dArray = [];
+// check divs for scripts and iframes
+//CAN WE APPEND HERE? AND RETURN WHETHER OR NOT HEAD HAS THE PUBLISHER SCRIPT
+//IN THE SAME METHOD....?
+/* ~~~USED WHEN PAGE HAS NO ADVMAN DIV NAME */
+function checkDivs(doc) {
+  var dArray = [];
+  var count = 0;
   var divs = doc.getElementsByTagName('div');
   var i;
   for (i = 0; i < divs.length; i++) {
-    var temp = divs[i];
-    attr = divs[i].getAttribute('id');
-    if (attr != null) {
-      if (attr.match(/^advman-ad-\d/)) { //cannot match empty string
-        dArray[dArray.length] = divs[i].outerHTML;
+    //find Google scripts in div
+    var div_scripts = divs[i].getElementsByTagName('script');
+    var j;
+    for (j = 0; j < div_scripts.length; j++) {
+      /*~~~ this code only works when googlesyndication script is one level in the div (works for correbh but not for gameofwarrealtips) ~~~*/
+      if (div_scripts[j].outerHTML.match(/\/\/pagead2\.googlesyndication\.com\/pagead\//)) {
+        dArray[dArray.length] = j + div_scripts[j].outerHTML;
       }
-      else if (attr.match(/ad/)) { //a div with an ad name
-        // check if it contains google scripts
-        if (divScripts(temp) == 1) {
-          //check if it has append script
-          if (hasAppend(temp) == 0) {
-            //does not have script, must append
-            var new_script = createScript();
-            var new_div = temp.appendChild(new_script);
-            dArray[dArray.length] = new_div.outerHTML;
-          }
+      //check for publisher script
+      var k;
+      if (k < div_scripts.length) {
+        if (div_scripts[k].outerHTML.match(/cdn\.adjs\.net\/publisher\.append\.ad\.min\.js/)) {
+          // dArray[dArray.length] = k + div_scripts[k].outerHTML;
         }
       }
     }
@@ -180,5 +182,5 @@ function getAllAds(doc) {
 //send message
 chrome.runtime.sendMessage({
   action: "findScript",
-  source: getDivs(document)
+  source: checkDivs(document)
 });
