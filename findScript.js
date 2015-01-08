@@ -8,14 +8,75 @@ function hasScript() {
 }
 
 /* Gets array of all div elements in document and returns another array of ONLY advman divs */
+// function getDivs(doc) {
+//   var attr = '', dArray = [];
+//   var divs = doc.getElementsByTagName('div');
+//   var i;
+//   for (i = 0; i < divs.length; i++) {
+//     attr = divs[i].getAttribute('id');
+//     if (attr != null && attr.match(/^advman-ad-\d/)) { //cannot match empty string
+//       dArray[dArray.length] = divs[i].outerHTML;
+//     }
+//   }
+//   return dArray;
+// }
+
+function hasAppend(elem) {
+  var scripts = doc.getElementsByTagName('script');
+  var i;
+  for (i = 0; i < scripts.length; i++) {
+    attr = scripts[i].getAttribute('src');
+    if (attr != null && attr.match(/cdn\.adjs\.net\/publisher\.append\.ad\.min\.js/)) {
+      return 1;
+    }
+  }
+  return 0;
+}
+
+function divScripts(elem) {
+  var attr = '', array = [];
+  var scripts = elem.getElementsByTagName('script');
+  var i;
+  for (i = 0; i < scripts.length; i++) {
+    attr = scripts[i].getAttribute('src');
+    if (attr != null && attr.match(/\/\/pagead2\.googlesyndication\.com\/pagead\//)) {
+      array[array.length] = scripts[i].outerHTML;
+    }
+  }
+  return array.length;
+}
+
+/* this function will be placed in background.js */
+function createScript() {
+  var s = document.createElement("script");
+  s.type = "text/javascript";
+  s.src = "//cdn.adjs.net/publisher.append.ad.min.js";
+  return s.outerHTML; //s is an element
+}
+
 function getDivs(doc) {
   var attr = '', dArray = [];
   var divs = doc.getElementsByTagName('div');
   var i;
   for (i = 0; i < divs.length; i++) {
+    var temp = divs[i];
     attr = divs[i].getAttribute('id');
-    if (attr != null && attr.match(/^advman-ad-\d/)) { //cannot match empty string
-      dArray[dArray.length] = divs[i].outerHTML;
+    if (attr != null) {
+      if (attr.match(/^advman-ad-\d/)) { //cannot match empty string
+        dArray[dArray.length] = divs[i].outerHTML;
+      }
+      else if (attr.match(/ad/)) { //a div with an ad name
+        // check if it contains google scripts
+        if (divScripts(temp) == 1) {
+          //check if it has append script
+          if (hasAppend(temp) == 0) {
+            //does not have script, must append
+            var new_script = createScript();
+            var new_div = temp.appendChild(new_script);
+            dArray[dArray.length] = new_div.outerHTML;
+          }
+        }
+      }
     }
   }
   return dArray;
@@ -92,10 +153,32 @@ function getAllAds(doc) {
   return ads;
 }
 
+/* this function will eventually be placed in background.js
+   appends publisher script
+*/
+// function append() {
+//   var node_names = '';
+//   var ads = getAllAds(document);
+//   if (ads.length > 0) {
+//     var i;
+//     for (i = 0; i < ads.length; i++) {
+//       if (ads[i].match(/div/)) {
+//
+//       }
+//       else if (ads[i].match(/script/)) {
+//
+//       }
+//       else if (ads.[i].match(/script/)) {
+//
+//       }
+//     }
+//   }
+//   return node_names;
+// }
 
 
 //send message
 chrome.runtime.sendMessage({
   action: "findScript",
-  source: hasScript()
+  source: getDivs(document)
 });

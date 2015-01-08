@@ -27,6 +27,19 @@ function addPubAppend() {
   // alert("Injected publisher append script!");
 }
 
+var ads = [];
+
+// chrome.runtime.onMessage.addListener(function(request, sender){
+//   if (request.action == "findScript") {
+//     ads = request.source;
+//     if (ads.length > 0) { //there are ads on the page
+//       var i;
+//       for (i = 0; i < ads.length; i++) {
+//
+//       }
+//     }
+//   }
+// });
 
 // listens for message
 chrome.runtime.onMessage.addListener(function(request, sender) {
