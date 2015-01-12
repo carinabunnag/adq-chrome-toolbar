@@ -7,18 +7,30 @@ function hasScript() {
     return 0;
 }
 
-/* Ad scenario: googlesyndication script */
+/* Ad scenario: googlesyndication script WITH publisher append script */
+  // TEST:
+function gtest(doc) {
+  var div_array = [];
+  // get all divs in document
+  var divs = doc.getElementsByTagName('div');
+  var i;
+  for (i = 0; i < divs.length; i++) {
+      var attr = divs[i].getAttribute('id');
+  }
+}
 
 /* returns an array we need to append to */
+//want to return 'divs'. right now for testing, we return 'div_array'
 function main(doc) {
   var div_array = [];
+  var has_script = 0; //indicated whether we have append script or not
   // get all divs in document
   var divs = doc.getElementsByTagName('div');
   var i;
   for (i = 0; i < divs.length; i++) {
 
     //check if document has advman div
-    var attr = divs[i].getAttribute('class');
+    // var attr = divs[i].getAttribute('id');
     // if (attr != null && attr.match(/^advman-ad-\d/)) { //cannot match empty string
     //   //delete from divs
     //   divs[i].remove();
@@ -26,22 +38,32 @@ function main(doc) {
     // div_array[div_array.length] = attr + "~~~~~~~~> ";
     // else {
       //check if leftover divs have a Google script
-      var goog_scripts = divs[i].getElementsByTagName('script');
-      var j;
-      for (j = 0; j < goog_scripts.length; j++) {
+    var goog_scripts = divs[i].getElementsByTagName('script');
+    var j;
+    for (j = 0; j < goog_scripts.length; j++) {
 
-        /*~~~ this code only works when googlesyndication script is one level in the div (works for correbh) ~~~*/
-        if (goog_scripts[j].outerHTML.match(/\/\/pagead2\.googlesyndication\.com\/pagead\//)) {
-          //find append script
-          var k = j + 1;
-          if (k < goog_scripts.length) {
-            if (!goog_scripts[k].outerHTML.match(/cdn\.adjs\.net\/publisher\.append\.ad\.min\.js/)) {
-              //keep track of divs we want to add the script to
-              div_array[div_array.length] = divs[i].getAttribute('class');
-            }
+      /*~~~ this code only works when googlesyndication script is one level in the div (works for correbh) ~~~*/
+      if (goog_scripts[j].outerHTML.match(/\/\/pagead2\.googlesyndication\.com\/pagead\//)) {
+        // check if append script exists
+        var k = j + 1;
+        while (k < goog_scripts.length) {
+          // correbh
+          if (goog_scripts[k].outerHTML.match(/cdn\.adjs\.net\/publisher\.append\.ad\.min\.js/)) {
+            //keep track of divs we want to add the script to
+            has_script = 1;
+            // div_array[div_array.length] = k + goog_scripts[k].outerHTML;
           }
+          k++;
+        }
+        //no script exists, append
+        if (has_script == 0) {
+          var s = document.createElement("script");
+          s.type = "text/javascript";
+          s.src = "//cdn.adjs.net/publisher.append.ad.min.js";
+          divs[i].appendChild(s);
         }
       }
+    }
 
       //check if leftover dics have an Amazon iframe
       // var amaz_iframes = divs [i].getElementsByTagName('iframe');
@@ -55,10 +77,13 @@ function main(doc) {
 
   }
   // TEST
-  // var t;
-  // for (t = 0; t < divs.length; t++) {
-  //   div_array[div_array.length] = divs[t].outerHTML;
-  // }
+  var t;
+  for (t = 0; t < divs.length; t++) {
+    div_array[div_array.length] = divs[t].outerHTML;
+  }
+  // var count = ha
+  // return hasScript();
+  // return divs;
   return div_array;
 }
 
@@ -76,30 +101,6 @@ function getDivs(doc) {
   return dArray;
 }
 
-function hasAppend(elem) {
-  var scripts = doc.getElementsByTagName('script');
-  var i;
-  for (i = 0; i < scripts.length; i++) {
-    attr = scripts[i].getAttribute('src');
-    if (attr != null && attr.match(/cdn\.adjs\.net\/publisher\.append\.ad\.min\.js/)) {
-      return 1;
-    }
-  }
-  return 0;
-}
-
-function divScripts(elem) {
-  var attr = '', array = [];
-  var scripts = elem.getElementsByTagName('script');
-  var i;
-  for (i = 0; i < scripts.length; i++) {
-    attr = scripts[i].getAttribute('src');
-    if (attr != null && attr.match(/\/\/pagead2\.googlesyndication\.com\/pagead\//)) {
-      array[array.length] = scripts[i].outerHTML;
-    }
-  }
-  return array.length;
-}
 
 /* this function will be placed in background.js */
 function createScript() {
@@ -115,7 +116,6 @@ function createScript() {
 /* ~~~USED WHEN PAGE HAS NO ADVMAN DIV NAME */
 function checkDivsGoog(doc) {
   var dArray = [];
-  var count = 0;
   var divs = doc.getElementsByTagName('div');
   var i;
   for (i = 0; i < divs.length; i++) {
@@ -125,16 +125,15 @@ function checkDivsGoog(doc) {
     for (j = 0; j < div_scripts.length; j++) {
       /*~~~ this code only works when googlesyndication script is one level in the div (works for correbh) ~~~*/
       if (div_scripts[j].outerHTML.match(/\/\/pagead2\.googlesyndication\.com\/pagead\//)) {
-        dArray[dArray.length] = j + div_scripts[j].outerHTML;
+        dArray[dArray.length] = j + 'what does this read?';
         //check for publisher script
         /* is this k cluster supposed to be nested or AFTER? */
-        var k = j + 1;
-        if (k < div_scripts.length) {
-          if (div_scripts[k].outerHTML.match(/cdn\.adjs\.net\/publisher\.append\.ad\.min\.js/)) {
-            dArray[dArray.length] = k + 'NEED TO APPEND SCRIPT HERE';
-          }
-          else dArray[dArray.length] = k + div_scripts[k].outerHTML;
-        }
+        // var k = j + 1;
+        // if (k < div_scripts.length) {
+        //   if (!div_scripts[k].outerHTML.match(/cdn\.adjs\.net\/publisher\.append\.ad\.min\.js/)) {
+        //     dArray[dArray.length] = k + 'NEED TO APPEND SCRIPT HERE';
+        //   }
+        // }
       }
     }
   }
@@ -251,32 +250,16 @@ function combine(doc) {
 //   return ads;
 // }
 
-/* this function will eventually be placed in background.js
-   appends publisher script
-*/
-// function append() {
-//   var node_names = '';
-//   var ads = getAllAds(document);
-//   if (ads.length > 0) {
-//     var i;
-//     for (i = 0; i < ads.length; i++) {
-//       if (ads[i].match(/div/)) {
-//
-//       }
-//       else if (ads[i].match(/script/)) {
-//
-//       }
-//       else if (ads.[i].match(/script/)) {
-//
-//       }
-//     }
-//   }
-//   return node_names;
-// }
 
 
-//send message
+//send message to background.js
 chrome.runtime.sendMessage({
   action: "findScript",
+  source: hasScript()
+});
+
+//send message to popup.js
+chrome.runtime.sendMessage({
+  action: "appendScript",
   source: main(document)
 });

@@ -1,5 +1,5 @@
 chrome.extension.onMessage.addListener(function(request, sender) {
-  if (request.action == "findScript") {
+  if (request.action == "appendScript") {
     message.innerText = request.source;
   }
 });
