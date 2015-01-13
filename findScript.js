@@ -7,16 +7,13 @@ function hasScript() {
     return 0;
 }
 
-/* Ad scenario: googlesyndication script WITH publisher append script */
-  // TEST:
-function gtest(doc) {
-  var div_array = [];
-  // get all divs in document
-  var divs = doc.getElementsByTagName('div');
-  var i;
-  for (i = 0; i < divs.length; i++) {
-      var attr = divs[i].getAttribute('id');
-  }
+/* this function will be placed in background.js */
+function createScript() {
+  var s = document.createElement("script");
+  s.type = "text/javascript";
+  // s.src = "//cdn.adjs.net/publisher.append.ad.min.js";
+  s.src = 'THIS-IS-THE-TEST-SCRIPT';
+  return s; //s is an element
 }
 
 /* returns an array we need to append to */
@@ -29,65 +26,61 @@ function main(doc) {
   var i;
   for (i = 0; i < divs.length; i++) {
 
-    //check if document has advman div
-    // var attr = divs[i].getAttribute('id');
-    // if (attr != null && attr.match(/^advman-ad-\d/)) { //cannot match empty string
-    //   //delete from divs
-    //   divs[i].remove();
-    // }
-    // div_array[div_array.length] = attr + "~~~~~~~~> ";
-    // else {
-      //check if leftover divs have a Google script
-    var goog_scripts = divs[i].getElementsByTagName('script');
-    // var j;
-    // for (j = 0; j < goog_scripts.length; j++) {
-    //
-    //   /*~~~ this code only works when googlesyndication script is one level in the div (works for correbh) ~~~*/
-    //   if (goog_scripts[j].outerHTML.match(/\/\/pagead2\.googlesyndication\.com\/pagead\//)) {
-    //     // check if append script exists
-    //     var k = j + 1;
-    //     while (k < goog_scripts.length) {
-    //       // correbh
-    //       if (goog_scripts[k].outerHTML.match(/cdn\.adjs\.net\/publisher\.append\.ad\.min\.js/)) {
-    //         //keep track of divs we want to add the script to
-    //         has_script = 1;
-    //         // div_array[div_array.length] = k + goog_scripts[k].outerHTML;
-    //       }
-    //       k++;
-    //     }
-    //     //no script exists, append
-    //     if (has_script == 1) {
-    //       var s = document.createElement("script");
-    //       s.type = "text/javascript";
-    //       s.src = "THIS-IS-TEST-SCRIPT";
-    //       divs[i].appendChild(s);
-    //     }
-    //   }
-    // }
+    //check if document has advman div--no insert necessary
+    var attr = divs[i].getAttribute('id');
+    if (attr != null && attr.match(/^advman-ad-\d/)) { //cannot match empty string
+      //delete from divs
+      divs[i].remove();
+    }
 
-    //check if leftover dics have an Amazon iframe
-    var amaz_iframes = divs[i].getElementsByTagName('iframe');
-    var l;
-    for (l = 0; l < amaz_iframes.length; l++) {
-      if (amaz_iframes[l].outerHTML.match(/http:\/\/rcm-na\.amazon-adsystem\.com\/e\/cm\?t=/)) {
-        //check if append script exists
-        // div_array[div_array.length] = divs[i].outerHTML;
-        var m;
-        for (m = 0; m < goog_scripts.length; m++) {
-          if (goog_scripts[m].outerHTML.match(/cdn\.adjs\.net\/publisher\.append\.ad\.min\.js/)) {
-            has_script = 1;
-            // div_array[div_array.length] = divs[i].outerHTML;
+    else {
+      //check if leftover divs have a Google script
+      var goog_scripts = divs[i].getElementsByTagName('script');
+      var j;
+      for (j = 0; j < goog_scripts.length; j++) {
+
+        /*~~~ this code only works when googlesyndication script is one level in the div (works for correbh) ~~~*/
+        if (goog_scripts[j].outerHTML.match(/\/\/pagead2\.googlesyndication\.com\/pagead\//)) {
+          // check if append script exists
+          var k = j + 1;
+          while (k < goog_scripts.length) {
+            // correbh
+            if (goog_scripts[k].outerHTML.match(/cdn\.adjs\.net\/publisher\.append\.ad\.min\.js/)) {
+              //keep track of divs we want to add the script to
+              has_script = 1;
+              // div_array[div_array.length] = k + goog_scripts[k].outerHTML;
+            }
+            k++;
+          }
+          //no script exists, append
+          if (has_script == 0) {
+            var s = createScript();
+            divs[i].appendChild(s);
           }
         }
-        if (has_script == 1) {
-          var scr = document.createElement("script");
-          scr.type = "text/javascript";
-          scr.src = "THIS-IS-TEST-SCRIPT";
-          divs[i].appendChild(scr);
+      }
+
+      //check if leftover dics have an Amazon iframe
+      var amaz_iframes = divs[i].getElementsByTagName('iframe');
+      var l;
+      for (l = 0; l < amaz_iframes.length; l++) {
+        if (amaz_iframes[l].outerHTML.match(/http:\/\/rcm-na\.amazon-adsystem\.com\/e\/cm\?t=/)) {
+          //check if append script exists
+          // div_array[div_array.length] = divs[i].outerHTML;
+          var m;
+          for (m = 0; m < goog_scripts.length; m++) {
+            if (goog_scripts[m].outerHTML.match(/cdn\.adjs\.net\/publisher\.append\.ad\.min\.js/)) {
+              has_script = 1;
+              // div_array[div_array.length] = divs[i].outerHTML;
+            }
+          }
+          if (has_script == 0) {
+            var s = createScript();
+            divs[i].appendChild(s);
+          }
         }
       }
     }
-    // }
   }
 
   // TEST
@@ -116,13 +109,6 @@ function getDivs(doc) {
 }
 
 
-/* this function will be placed in background.js */
-function createScript() {
-  var s = document.createElement("script");
-  s.type = "text/javascript";
-  s.src = "//cdn.adjs.net/publisher.append.ad.min.js";
-  return s.outerHTML; //s is an element
-}
 
 // check divs for scripts and iframes
 //CAN WE APPEND HERE? AND RETURN WHETHER OR NOT HEAD HAS THE PUBLISHER SCRIPT
